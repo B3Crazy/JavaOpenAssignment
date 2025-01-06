@@ -41,7 +41,6 @@
                 <Button text="=" onAction="#handleButtonAction" GridPane.rowIndex="4" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
                 <Button text="+" onAction="#handleButtonAction" GridPane.rowIndex="4" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
                 
-                <!-- New row for additional buttons -->
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="0" prefWidth="50" prefHeight="50"/>
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
