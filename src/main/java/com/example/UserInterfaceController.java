@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.util.Callback;
 
 public class UserInterfaceController {
@@ -15,6 +17,8 @@ public class UserInterfaceController {
     @FXML
     private ListView<String> historyList;
 
+    private ObservableList<String> historyItems = FXCollections.observableArrayList();
+
     private String currentInput = "";
     private CalculatorOperation currentOperation;
     private double firstOperand = 0;
@@ -22,6 +26,7 @@ public class UserInterfaceController {
 
     @FXML
     public void initialize() {
+        historyList.setItems(historyItems);
         historyList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> listView) {
@@ -119,7 +124,7 @@ public class UserInterfaceController {
             double result = currentOperation.calculate(firstOperand, secondOperand);
 
             String calculation = firstOperand + " " + getOperatorSymbol(currentOperation) + " " + secondOperand + " = " + result;
-            historyList.getItems().add(calculation);
+            historyItems.add(0, calculation); // Add new calculation at the top
 
             display.setText(String.valueOf(result));
             currentInput = String.valueOf(result);
