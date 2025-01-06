@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.UserInterfaceController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.UserInterfaceController" stylesheets="com/example/styles.css">
     <HBox spacing="10" alignment="CENTER">
         <!-- Calculator Section -->
         <VBox spacing="10" alignment="CENTER">
@@ -40,6 +40,12 @@
                 <Button text="." onAction="#handleButtonAction" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
                 <Button text="=" onAction="#handleButtonAction" GridPane.rowIndex="4" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
                 <Button text="+" onAction="#handleButtonAction" GridPane.rowIndex="4" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
+                
+                <!-- New row for additional buttons -->
+                <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="0" prefWidth="50" prefHeight="50"/>
+                <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
+                <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
+                <Button text="Show History" onAction="#handleShowHistory" GridPane.rowIndex="5" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
             </GridPane>
         </VBox>
         

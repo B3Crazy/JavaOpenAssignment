@@ -7,7 +7,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserInterfaceController {
 
@@ -15,27 +21,27 @@ public class UserInterfaceController {
     private TextField display;
 
     @FXML
-    private ListView<String> historyList;
+    private ListView<Calculation> historyList;
 
-    private ObservableList<String> historyItems = FXCollections.observableArrayList();
+    private ObservableList<Calculation> historyItems = FXCollections.observableArrayList();
 
     private String currentInput = "";
-    private CalculatorOperation currentOperation;
-    private double firstOperand = 0;
+    private List<Double> operands = new ArrayList<>();
+    private String currentOperator = "";
     private boolean resultShown = false;
 
     @FXML
     public void initialize() {
         historyList.setItems(historyItems);
-        historyList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        historyList.setCellFactory(new Callback<ListView<Calculation>, ListCell<Calculation>>() {
             @Override
-            public ListCell<String> call(ListView<String> listView) {
-                return new ListCell<String>() {
+            public ListCell<Calculation> call(ListView<Calculation> listView) {
+                return new ListCell<Calculation>() {
                     @Override
-                    protected void updateItem(String item, boolean empty) {
+                    protected void updateItem(Calculation item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
-                            setText(item);
+                            setText(item.toString());
                             setStyle("-fx-background-color: #1a001a; -fx-text-fill: #ffffff;");
                         } else {
                             setText(null);
@@ -53,42 +59,39 @@ public class UserInterfaceController {
 
         if (resultShown && !isOperator(buttonText)) {
             currentInput = "";
+            operands.clear();
+            currentOperator = "";
             resultShown = false;
         }
 
-        switch (buttonText) {
-            case "=":
+        if (isOperator(buttonText)) {
+            if (!currentInput.isEmpty()) {
+                operands.add(Double.parseDouble(currentInput));
+                currentInput = "";
+            }
+            currentOperator = buttonText;
+        } else if (buttonText.equals("=")) {
+            if (!currentInput.isEmpty()) {
+                operands.add(Double.parseDouble(currentInput));
                 calculateResult();
-                break;
-            case "+":
-                setOperation(new AdditionOperation());
-                break;
-            case "-":
-                setOperation(new SubtractionOperation());
-                break;
-            case "*":
-                setOperation(new MultiplicationOperation());
-                break;
-            case "/":
-                setOperation(new DivisionOperation());
-                break;
-            default:
-                appendToInput(buttonText);
-                break;
+            }
+        } else {
+            currentInput += buttonText;
+            display.setText(currentInput);
         }
     }
 
     @FXML
     private void handleMemoryClear() {
-        // Implement memory clear functionality
+        historyItems.clear();
         System.out.println("Memory cleared");
     }
 
     @FXML
     private void handleClear() {
         currentInput = "";
-        currentOperation = null;
-        firstOperand = 0;
+        operands.clear();
+        currentOperator = "";
         display.setText("");
     }
 
@@ -105,48 +108,77 @@ public class UserInterfaceController {
         System.exit(0);
     }
 
-    private void appendToInput(String value) {
-        currentInput += value;
-        display.setText(currentInput);
-    }
-
-    private void setOperation(CalculatorOperation operation) {
-        if (!currentInput.isEmpty()) {
-            firstOperand = Double.parseDouble(currentInput);
-            currentOperation = operation;
-            currentInput = "";
-        }
+    private boolean isOperator(String value) {
+        return value.equals("+") || value.equals("-") || value.equals("*") || value.equals("/");
     }
 
     private void calculateResult() {
-        if (!currentInput.isEmpty() && currentOperation != null) {
-            double secondOperand = Double.parseDouble(currentInput);
-            double result = currentOperation.calculate(firstOperand, secondOperand);
+        try {
+            double result = operands.get(0);
+            for (int i = 1; i < operands.size(); i++) {
+                switch (currentOperator) {
+                    case "+":
+                        result += operands.get(i);
+                        break;
+                    case "-":
+                        result -= operands.get(i);
+                        break;
+                    case "*":
+                        result *= operands.get(i);
+                        break;
+                    case "/":
+                        result /= operands.get(i);
+                        break;
+                }
+            }
 
-            String calculation = firstOperand + " " + getOperatorSymbol(currentOperation) + " " + secondOperand + " = " + result;
+            Calculation calculation = new Calculation(new ArrayList<>(operands), currentOperator, result);
             historyItems.add(0, calculation); // Add new calculation at the top
 
             display.setText(String.valueOf(result));
             currentInput = String.valueOf(result);
-            currentOperation = null;
+            operands.clear();
+            operands.add(result);
+            currentOperator = "";
             resultShown = true;
+        } catch (NumberFormatException e) {
+            display.setText("Error: Invalid number format");
+        } catch (ArithmeticException e) {
+            display.setText("Error: Arithmetic error");
+        } catch (Exception e) {
+            display.setText("Error: " + e.getMessage());
         }
     }
 
-    private String getOperatorSymbol(CalculatorOperation operation) {
-        if (operation instanceof AdditionOperation) {
-            return "+";
-        } else if (operation instanceof SubtractionOperation) {
-            return "-";
-        } else if (operation instanceof MultiplicationOperation) {
-            return "*";
-        } else if (operation instanceof DivisionOperation) {
-            return "/";
-        }
-        return "";
-    }
+    @FXML
+    private void handleShowHistory() {
+        ObservableList<Calculation> sortedItems = FXCollections.observableArrayList(historyItems);
+        FXCollections.sort(sortedItems);
 
-    private boolean isOperator(String value) {
-        return value.equals("+") || value.equals("-") || value.equals("*") || value.equals("/");
+        ListView<Calculation> sortedListView = new ListView<>(sortedItems);
+        sortedListView.setCellFactory(new Callback<ListView<Calculation>, ListCell<Calculation>>() {
+            @Override
+            public ListCell<Calculation> call(ListView<Calculation> listView) {
+                return new ListCell<Calculation>() {
+                    @Override
+                    protected void updateItem(Calculation item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null) {
+                            setText(item.toString());
+                            setStyle("-fx-background-color: #1a001a; -fx-text-fill: #ffffff;");
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
+
+        VBox vbox = new VBox(sortedListView);
+        Scene scene = new Scene(vbox, 300, 400);
+        Stage stage = new Stage();
+        stage.setTitle("Sorted Calculations");
+        stage.setScene(scene);
+        stage.show();
     }
 }
