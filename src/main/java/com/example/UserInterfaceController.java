@@ -51,6 +51,15 @@ public class UserInterfaceController {
                 };
             }
         });
+
+        historyList.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Calculation selectedCalculation = historyList.getSelectionModel().getSelectedItem();
+                if (selectedCalculation != null) {
+                    continueCalculation(selectedCalculation);
+                }
+            }
+        });
     }
 
     @FXML
@@ -139,7 +148,7 @@ public class UserInterfaceController {
             display.setText(String.valueOf(result));
             currentInput = String.valueOf(result);
             operands.clear();
-            operands.add(result);
+            operands.add(result); // Only the result is used for the next calculation
             currentOperator = "";
             resultShown = true;
         } catch (NumberFormatException e) {
@@ -183,5 +192,14 @@ public class UserInterfaceController {
         stage.setTitle("Sorted Calculations");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void continueCalculation(Calculation calculation) {
+        operands.clear();
+        operands.add(calculation.getResult()); // Only the result is used for the next calculation
+        currentOperator = "";
+        currentInput = "";
+        display.setText(String.valueOf(calculation.getResult()));
+        resultShown = false;
     }
 }
