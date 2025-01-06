@@ -14,6 +14,7 @@ import javafx.util.Callback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserInterfaceController {
 
@@ -152,19 +153,21 @@ public class UserInterfaceController {
 
     @FXML
     private void handleShowHistory() {
-        ObservableList<Calculation> sortedItems = FXCollections.observableArrayList(historyItems);
-        FXCollections.sort(sortedItems);
+        ObservableList<String> sortedItems = historyItems.stream()
+            .sorted()
+            .map(Calculation::toString)
+            .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-        ListView<Calculation> sortedListView = new ListView<>(sortedItems);
-        sortedListView.setCellFactory(new Callback<ListView<Calculation>, ListCell<Calculation>>() {
+        ListView<String> sortedListView = new ListView<>(sortedItems);
+        sortedListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
-            public ListCell<Calculation> call(ListView<Calculation> listView) {
-                return new ListCell<Calculation>() {
+            public ListCell<String> call(ListView<String> listView) {
+                return new ListCell<String>() {
                     @Override
-                    protected void updateItem(Calculation item, boolean empty) {
+                    protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (item != null) {
-                            setText(item.toString());
+                            setText(item);
                             setStyle("-fx-background-color: #1a001a; -fx-text-fill: #ffffff;");
                         } else {
                             setText(null);
