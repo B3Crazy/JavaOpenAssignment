@@ -6,19 +6,19 @@
 .text-field {
     -fx-background-color: #3c3f41;
     -fx-text-fill: #ffffff;
-    -fx-border-color: #da18c9;
+    -fx-border-color: #ff00ea;
     -fx-border-width: 2px;
 }
 
 .button {
     -fx-background-color: #3c3f41;
     -fx-text-fill: #ffffff;
-    -fx-border-color: #da18c9;
+    -fx-border-color: #ff00ea;
     -fx-border-width: 2px;
 }
 
 .button:hover {
-    -fx-background-color: #da18c9;
+    -fx-background-color: #ff00ea;
 }
 
 .label {
@@ -26,8 +26,13 @@
 }
 
 .list-view {
-    -fx-background-color: #3c3f41;
+    -fx-background-color: #1a001a; /* Very dark purple */
     -fx-text-fill: #ffffff;
-    -fx-border-color: #da18c9;
+    -fx-border-color: #ff00ea;
     -fx-border-width: 2px;
+}
+
+.list-view .list-cell {
+    -fx-background-color: #1a001a; /* Very dark purple */
+    -fx-text-fill: #ffffff;
 }

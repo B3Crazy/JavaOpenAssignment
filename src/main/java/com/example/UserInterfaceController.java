@@ -2,8 +2,10 @@ package com.example;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.util.Callback;
 
 public class UserInterfaceController {
 
@@ -14,23 +16,56 @@ public class UserInterfaceController {
     private ListView<String> historyList;
 
     private String currentInput = "";
-    private String operator = "";
+    private CalculatorOperation currentOperation;
     private double firstOperand = 0;
+    private boolean resultShown = false;
+
+    @FXML
+    public void initialize() {
+        historyList.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+            @Override
+            public ListCell<String> call(ListView<String> listView) {
+                return new ListCell<String>() {
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null) {
+                            setText(item);
+                            setStyle("-fx-background-color: #1a001a; -fx-text-fill: #ffffff;");
+                        } else {
+                            setText(null);
+                        }
+                    }
+                };
+            }
+        });
+    }
 
     @FXML
     private void handleButtonAction(javafx.event.ActionEvent event) {
         Button button = (Button) event.getSource();
         String buttonText = button.getText();
 
+        if (resultShown && !isOperator(buttonText)) {
+            currentInput = "";
+            resultShown = false;
+        }
+
         switch (buttonText) {
             case "=":
                 calculateResult();
                 break;
             case "+":
+                setOperation(new AdditionOperation());
+                break;
             case "-":
+                setOperation(new SubtractionOperation());
+                break;
             case "*":
+                setOperation(new MultiplicationOperation());
+                break;
             case "/":
-                setOperator(buttonText);
+                setOperation(new DivisionOperation());
                 break;
             default:
                 appendToInput(buttonText);
@@ -47,7 +82,7 @@ public class UserInterfaceController {
     @FXML
     private void handleClear() {
         currentInput = "";
-        operator = "";
+        currentOperation = null;
         firstOperand = 0;
         display.setText("");
     }
@@ -70,40 +105,43 @@ public class UserInterfaceController {
         display.setText(currentInput);
     }
 
-    private void setOperator(String op) {
+    private void setOperation(CalculatorOperation operation) {
         if (!currentInput.isEmpty()) {
             firstOperand = Double.parseDouble(currentInput);
-            operator = op;
+            currentOperation = operation;
             currentInput = "";
         }
     }
 
     private void calculateResult() {
-        if (!currentInput.isEmpty() && !operator.isEmpty()) {
+        if (!currentInput.isEmpty() && currentOperation != null) {
             double secondOperand = Double.parseDouble(currentInput);
-            double result = 0;
+            double result = currentOperation.calculate(firstOperand, secondOperand);
 
-            switch (operator) {
-                case "+":
-                    result = firstOperand + secondOperand;
-                    break;
-                case "-":
-                    result = firstOperand - secondOperand;
-                    break;
-                case "*":
-                    result = firstOperand * secondOperand;
-                    break;
-                case "/":
-                    result = firstOperand / secondOperand;
-                    break;
-            }
-
-            String calculation = firstOperand + " " + operator + " " + secondOperand + " = " + result;
+            String calculation = firstOperand + " " + getOperatorSymbol(currentOperation) + " " + secondOperand + " = " + result;
             historyList.getItems().add(calculation);
 
             display.setText(String.valueOf(result));
             currentInput = String.valueOf(result);
-            operator = "";
+            currentOperation = null;
+            resultShown = true;
         }
+    }
+
+    private String getOperatorSymbol(CalculatorOperation operation) {
+        if (operation instanceof AdditionOperation) {
+            return "+";
+        } else if (operation instanceof SubtractionOperation) {
+            return "-";
+        } else if (operation instanceof MultiplicationOperation) {
+            return "*";
+        } else if (operation instanceof DivisionOperation) {
+            return "/";
+        }
+        return "";
+    }
+
+    private boolean isOperator(String value) {
+        return value.equals("+") || value.equals("-") || value.equals("*") || value.equals("/");
     }
 }
