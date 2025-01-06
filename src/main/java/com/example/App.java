@@ -16,9 +16,9 @@ public class App extends Application {
         try {
             System.out.println("Loading FXML file...");
             Parent root = FXMLLoader.load(getClass().getResource("/com/example/userInterface.fxml"));
-            System.out.println("FXML file loaded successfully.");
-
             Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/com/example/styles.css").toExternalForm());
+            System.out.println("FXML file loaded successfully.");
             primaryStage.setTitle("Calculator");
             primaryStage.setScene(scene);
             primaryStage.setWidth(550);
