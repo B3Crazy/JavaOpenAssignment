@@ -6,19 +6,19 @@
 .text-field {
     -fx-background-color: #3c3f41;
     -fx-text-fill: #ffffff;
-    -fx-border-color: #6a1b9a;
+    -fx-border-color: #da18c9;
     -fx-border-width: 2px;
 }
 
 .button {
     -fx-background-color: #3c3f41;
     -fx-text-fill: #ffffff;
-    -fx-border-color: #6a1b9a;
+    -fx-border-color: #da18c9;
     -fx-border-width: 2px;
 }
 
 .button:hover {
-    -fx-background-color: #6a1b9a;
+    -fx-background-color: #da18c9;
 }
 
 .label {
@@ -28,6 +28,6 @@
 .list-view {
     -fx-background-color: #3c3f41;
     -fx-text-fill: #ffffff;
-    -fx-border-color: #6a1b9a;
+    -fx-border-color: #da18c9;
     -fx-border-width: 2px;
 }
