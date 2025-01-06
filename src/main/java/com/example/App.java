@@ -21,8 +21,8 @@ public class App extends Application {
             Scene scene = new Scene(root);
             primaryStage.setTitle("Calculator");
             primaryStage.setScene(scene);
-            primaryStage.setWidth(300);
-            primaryStage.setHeight(400);
+            primaryStage.setWidth(550);
+            primaryStage.setHeight(500);
             primaryStage.setResizable(false);
             primaryStage.show();
             System.out.println("Application started successfully.");
