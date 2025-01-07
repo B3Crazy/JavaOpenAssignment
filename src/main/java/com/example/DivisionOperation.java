@@ -1,7 +1,7 @@
 package com.example;
 
 // Class to represent the division operation, implementing the CalculatorOperation interface
-public class DivisionOperation implements CalculatorOperation {
+public abstract class DivisionOperation implements CalculatorOperation {
 
     // Override the calculate method to perform division
     @Override
