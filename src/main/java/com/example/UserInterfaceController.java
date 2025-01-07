@@ -28,6 +28,8 @@ public class UserInterfaceController {
 
     // List to store the operands for calculations
     private List<Double> operands = new ArrayList<>();
+    // List to store the operators for calculations
+    private List<String> operators = new ArrayList<>();
     // List to store the history of calculations
     private ObservableList<Calculation> historyItems = FXCollections.observableArrayList();
     // String to store the current operator
@@ -82,10 +84,12 @@ public class UserInterfaceController {
         // Get the text of the button
         String buttonText = button.getText();
 
-        // If the result is shown and the button is not an operator, reset the input and operands
+        // If the result is shown and the button is not an operator, reset the input and
+        // operands
         if (resultShown && !isOperator(buttonText)) {
             currentInput = "";
             operands.clear();
+            operators.clear();
             currentOperator = "";
             resultShown = false;
         }
@@ -99,6 +103,7 @@ public class UserInterfaceController {
             }
             // Set the current operator to the button text
             currentOperator = buttonText;
+            operators.add(currentOperator);
         } else if (buttonText.equals("=")) {
             // If the button is "=", calculate the result
             if (!currentInput.isEmpty()) {
@@ -122,6 +127,7 @@ public class UserInterfaceController {
     private void handleClear() {
         currentInput = "";
         operands.clear();
+        operators.clear();
         currentOperator = "";
         display.setText("");
     }
@@ -147,28 +153,31 @@ public class UserInterfaceController {
     // Method to calculate the result of the current operation
     private void calculateResult() {
         try {
-            double result = operands.get(0); // Initialize the result with the first operand
-
-            // Loop through the operands and apply the current operator
+            double result = operands.get(0);
             for (int i = 1; i < operands.size(); i++) {
-                switch (currentOperator) {
+                String operator = operators.get(i - 1);
+                double operand = operands.get(i);
+                switch (operator) {
                     case "+":
-                        result += operands.get(i);
+                        result += operand;
                         break;
                     case "-":
-                        result -= operands.get(i);
+                        result -= operand;
                         break;
                     case "*":
-                        result *= operands.get(i);
+                        result *= operand;
                         break;
                     case "/":
-                        result /= operands.get(i);
+                        result /= operand;
                         break;
+                    default:
+                        throw new IllegalArgumentException("Invalid operator: " + operator);
                 }
             }
 
-            // Create a new Calculation object with the current operands, operator, and result
-            Calculation calculation = new Calculation(new ArrayList<>(operands), currentOperator, result);
+            // Create a new Calculation object with the current operands, operators, and
+            // result
+            Calculation calculation = new Calculation(new ArrayList<>(operands), new ArrayList<>(operators));
 
             // Add the new calculation to the top of the history list
             historyItems.add(0, calculation);
@@ -179,8 +188,10 @@ public class UserInterfaceController {
             // Update the current input to the result for the next calculation
             currentInput = String.valueOf(result);
 
-            // Clear the operands list and add the result as the only operand for the next calculation
+            // Clear the operands and operators lists and add the result as the only operand
+            // for the next calculation
             operands.clear();
+            operators.clear();
             operands.add(result); // Only the result is used for the next calculation
 
             // Reset the current operator and set the resultShown flag to true
@@ -188,7 +199,7 @@ public class UserInterfaceController {
             resultShown = true;
 
         } catch (NumberFormatException e) {
-            // Catch block for handling invalid number format exceptions
+            // Handle the exception
             display.setText("Error: Invalid number format");
         } catch (ArithmeticException e) {
             // Catch block for handling arithmetic exceptions (e.g., division by zero)
@@ -202,11 +213,12 @@ public class UserInterfaceController {
     // Method to handle showing the calculation history
     @FXML
     private void handleShowHistory() {
-        // Sort the history items, convert them to strings, and collect them into an observable list
+        // Sort the history items, convert them to strings, and collect them into an
+        // observable list
         ObservableList<String> sortedItems = historyItems.stream()
-            .sorted()
-            .map(Calculation::toString)
-            .collect(Collectors.toCollection(FXCollections::observableArrayList));
+                .sorted()
+                .map(Calculation::toString)
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
         // Create a ListView to display the sorted items
         ListView<String> sortedListView = new ListView<>(sortedItems);
@@ -259,5 +271,27 @@ public class UserInterfaceController {
         display.setText(String.valueOf(calculation.getResult()));
         // Set the resultShown flag to false to allow further calculations
         resultShown = false;
+    }
+
+    // Method to sort and display calculations
+    public void displaySortedCalculations() {
+        ObservableList<String> sortedItems = historyItems.stream()
+                .sorted() // This uses the compareTo method in Calculation
+                .map(Calculation::toString)
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+
+        // Create a ListView to display the sorted items
+        ListView<String> sortedListView = new ListView<>(sortedItems);
+
+        VBox vbox = new VBox(sortedListView);
+
+        // Create a new Scene with the VBox layout, setting its width and height
+        Scene scene = new Scene(vbox, 300, 400);
+
+        // Create a new Stage (window) for displaying the sorted calculations
+        Stage stage = new Stage();
+        stage.setTitle("Sorted Calculations"); // Set the title of the window
+        stage.setScene(scene); // Set the scene to the stage
+        stage.show(); // Display the stage
     }
 }

@@ -7,16 +7,16 @@ public class Calculation implements Comparable<Calculation> {
 
     // List to store the operands of the calculation
     private List<Double> operands;
-    // String to store the operator of the calculation
-    private String operator;
+    // List to store the operators of the calculation
+    private List<String> operators;
     // Double to store the result of the calculation
     private double result;
 
-    // Constructor to initialize the operands, operator, and result
-    public Calculation(List<Double> operands, String operator, double result) {
+    // Constructor to initialize the operands, operators, and result
+    public Calculation(List<Double> operands, List<String> operators) {
         this.operands = operands;
-        this.operator = operator;
-        this.result = result;
+        this.operators = operators;
+        this.result = performCalculation();
     }
 
     // Getter method for operands
@@ -24,13 +24,39 @@ public class Calculation implements Comparable<Calculation> {
         return operands;
     }
 
-    // Getter method for operator
-    public String getOperator() {
-        return operator;
+    // Getter method for operators
+    public List<String> getOperators() {
+        return operators;
     }
 
     // Getter method for result
     public double getResult() {
+        return result;
+    }
+
+    // Method to perform the calculation based on operands and operators
+    private double performCalculation() {
+        double result = operands.get(0);
+        for (int i = 1; i < operands.size(); i++) {
+            String operator = operators.get(i - 1);
+            double operand = operands.get(i);
+            switch (operator) {
+                case "+":
+                    result += operand;
+                    break;
+                case "-":
+                    result -= operand;
+                    break;
+                case "*":
+                    result *= operand;
+                    break;
+                case "/":
+                    result /= operand;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid operator: " + operator);
+            }
+        }
         return result;
     }
 
@@ -44,11 +70,9 @@ public class Calculation implements Comparable<Calculation> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < operands.size(); i++) {
-            sb.append(operands.get(i));
-            if (i < operands.size() - 1) {
-                sb.append(" ").append(operator).append(" ");
-            }
+        sb.append(operands.get(0));
+        for (int i = 1; i < operands.size(); i++) {
+            sb.append(" ").append(operators.get(i - 1)).append(" ").append(operands.get(i));
         }
         sb.append(" = ").append(result);
         return sb.toString();

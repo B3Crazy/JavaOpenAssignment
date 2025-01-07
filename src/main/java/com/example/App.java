@@ -17,37 +17,37 @@ public class App extends Application {
         try {
             // Print a message indicating the FXML file is being loaded
             System.out.println("Loading FXML file...");
-            
+
             // Load the FXML file to create the UI
             Parent root = FXMLLoader.load(getClass().getResource("/com/example/userInterface.fxml"));
-            
+
             // Create a new Scene with the loaded FXML root
             Scene scene = new Scene(root);
-            
+
             // Add the stylesheet to the scene
             scene.getStylesheets().add(getClass().getResource("/com/example/styles.css").toExternalForm());
-            
+
             // Print a message indicating the FXML file was loaded successfully
             System.out.println("FXML file loaded successfully.");
-            
+
             // Set the title of the primary stage (window)
             primaryStage.setTitle("Calculator");
-            
+
             // Set the scene of the primary stage
             primaryStage.setScene(scene);
-            
+
             // Set the width of the primary stage
             primaryStage.setWidth(550);
-            
+
             // Set the height of the primary stage
             primaryStage.setHeight(500);
-            
+
             // Make the primary stage non-resizable
             primaryStage.setResizable(false);
-            
+
             // Show the primary stage
             primaryStage.show();
-            
+
             // Print a message indicating the application started successfully
             System.out.println("Application started successfully.");
         } catch (Exception e) {

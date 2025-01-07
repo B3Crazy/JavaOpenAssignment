@@ -23,9 +23,9 @@
                 <!-- Memory Clear button -->
                 <Button text="MC" onAction="#handleMemoryClear" GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="50" prefHeight="50"/>
                 <!-- Clear button -->
-                <Button text="C" onAction="#handleClear" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
+                <Button text="AC" onAction="#handleClear" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
                 <!-- Delete button -->
-                <Button text="DEL" onAction="#handleDelete" GridPane.rowIndex="0" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
+                <Button text="C" onAction="#handleDelete" GridPane.rowIndex="0" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
                 <!-- Off button -->
                 <Button text="OFF" onAction="#handleOff" GridPane.rowIndex="0" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
                 
@@ -57,7 +57,7 @@
                 <!-- blank button -->
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
                 <!-- ordered calculations button -->
-                <Button text="Show History" onAction="#handleShowHistory" GridPane.rowIndex="5" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
+                <Button text="SH" onAction="#handleShowHistory" GridPane.rowIndex="5" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
             </GridPane>
         </VBox>
         
