@@ -10,17 +10,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.UserInterfaceController" stylesheets="com/example/styles.css">
+<!-- Define the root element as an AnchorPane and link it to the UserInterfaceController -->
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.UserInterfaceController">
+<!-- Define an HBox layout with spacing and alignment -->
     <HBox spacing="10" alignment="CENTER">
         <!-- Calculator Section -->
         <VBox spacing="10" alignment="CENTER">
+        <!-- TextField to display the current input and result, not editable, with a larger font size -->
             <TextField fx:id="display" editable="false" style="-fx-font-size: 24px;"/>
+            <!-- GridPane layout for the calculator buttons with horizontal and vertical gaps and centered alignment -->
             <GridPane hgap="10" vgap="10" alignment="CENTER">
+                <!-- Memory Clear button -->
                 <Button text="MC" onAction="#handleMemoryClear" GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="50" prefHeight="50"/>
+                <!-- Clear button -->
                 <Button text="C" onAction="#handleClear" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
+                <!-- Delete button -->
                 <Button text="DEL" onAction="#handleDelete" GridPane.rowIndex="0" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
+                <!-- Off button -->
                 <Button text="OFF" onAction="#handleOff" GridPane.rowIndex="0" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
                 
+                <!-- Number and operator buttons for the calculator -->
                 <Button text="7" onAction="#handleButtonAction" GridPane.rowIndex="1" GridPane.columnIndex="0" prefWidth="50" prefHeight="50"/>
                 <Button text="8" onAction="#handleButtonAction" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
                 <Button text="9" onAction="#handleButtonAction" GridPane.rowIndex="1" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
@@ -41,9 +50,13 @@
                 <Button text="=" onAction="#handleButtonAction" GridPane.rowIndex="4" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
                 <Button text="+" onAction="#handleButtonAction" GridPane.rowIndex="4" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
                 
+                <!-- blank button -->
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="0" prefWidth="50" prefHeight="50"/>
+                <!-- blank button -->
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
+                <!-- blank button -->
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
+                <!-- ordered calculations button -->
                 <Button text="Show History" onAction="#handleShowHistory" GridPane.rowIndex="5" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
             </GridPane>
         </VBox>
