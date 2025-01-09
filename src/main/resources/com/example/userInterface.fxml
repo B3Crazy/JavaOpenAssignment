@@ -50,12 +50,11 @@
                 <Button text="=" onAction="#handleButtonAction" GridPane.rowIndex="4" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
                 <Button text="+" onAction="#handleButtonAction" GridPane.rowIndex="4" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
                 
-                <!-- blank button -->
+                <!-- blank buttons -->
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="0" prefWidth="50" prefHeight="50"/>
-                <!-- blank button -->
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
-                <!-- blank button -->
-                <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
+                <!-- open Form Calculator -->
+                <Button text="Form Calculator" onAction="#handleOpenFormCalculator" GridPane.rowIndex="5" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
                 <!-- ordered calculations button -->
                 <Button text="SH" onAction="#handleShowHistory" GridPane.rowIndex="5" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
             </GridPane>
@@ -64,7 +63,7 @@
         <!-- Calculation History Section -->
         <VBox spacing="10" alignment="CENTER">
             <Label text="History" style="-fx-font-size: 18px;" />
-            <ListView fx:id="historyList" prefWidth="200" prefHeight="400"/>
+            <ListView fx:id="historyListView" prefWidth="200" prefHeight="400"/>
         </VBox>
     </HBox>
 </AnchorPane>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FormCalculatorController" spacing="10" alignment="CENTER">
+    <Label text="Form Calculator" style="-fx-font-size: 24px;"/>
+    <GridPane hgap="10" vgap="10" alignment="CENTER">
+        <Label text="Radius:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="radiusField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Button text="Calculate Circle Area" onAction="#handleCalculateCircleArea" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
+
+        <Label text="Width:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="widthField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        <Label text="Height:" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+        <TextField fx:id="heightField" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+        <Button text="Calculate Rectangle Area" onAction="#handleCalculateRectangleArea" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+
+        <Label text="Base:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="baseField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <Label text="Height:" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+        <TextField fx:id="triangleHeightField" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+        <Button text="Calculate Triangle Area" onAction="#handleCalculateTriangleArea" GridPane.rowIndex="2" GridPane.columnIndex="4"/>
+    </GridPane>
+    <Label fx:id="resultLabel" style="-fx-font-size: 18px;"/>
+</VBox>

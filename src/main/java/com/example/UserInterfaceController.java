@@ -1,139 +1,205 @@
 package com.example;
 
-// Import necessary JavaFX and utility classes
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
-
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// Controller class for handling the user interface
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 public class UserInterfaceController {
-
-    // FXML annotations to link UI components
     @FXML
-    private TextField display; // TextField to display the current input and result
+    private TextField operand1Field;
     @FXML
-    private ListView<Calculation> historyList; // ListView to display the history of calculations
+    private TextField operand2Field;
+    @FXML
+    private Label resultLabel;
+    @FXML
+    private TextField display;
+    @FXML
+    private ListView<String> historyListView;
 
-    // List to store the operands for calculations
     private List<Double> operands = new ArrayList<>();
-    // List to store the operators for calculations
     private List<String> operators = new ArrayList<>();
-    // List to store the history of calculations
-    private ObservableList<Calculation> historyItems = FXCollections.observableArrayList();
-    // String to store the current operator
-    private String currentOperator = "";
-    // String to store the current input
+    private ObservableList<String> historyItems = FXCollections.observableArrayList();
     private String currentInput = "";
-    // Boolean flag to indicate if the result is shown
+    private String currentOperator = "";
     private boolean resultShown = false;
 
-    // Method to initialize the controller
-    @FXML
-    public void initialize() {
-        // Set the items of the historyList to the historyItems
-        historyList.setItems(historyItems);
-        historyList.setCellFactory(new Callback<ListView<Calculation>, ListCell<Calculation>>() {
-            @Override
-            public ListCell<Calculation> call(ListView<Calculation> listView) {
-                return new ListCell<Calculation>() {
-                    @Override
-                    protected void updateItem(Calculation item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item != null) {
-                            setText(item.toString());
-                            setStyle("-fx-background-color: #1a001a; -fx-text-fill: #ffffff;");
-                        } else {
-                            setText(null);
-                        }
-                    }
-                };
-            }
-        });
-
-        // Add a mouse click event handler to the historyList
-        historyList.setOnMouseClicked(event -> {
-            // Check if the click count is 2 (double-click)
-            if (event.getClickCount() == 2) {
-                // Get the selected calculation from the history list
-                Calculation selectedCalculation = historyList.getSelectionModel().getSelectedItem();
-                // If a calculation is selected, continue the calculation
-                if (selectedCalculation != null) {
-                    continueCalculation(selectedCalculation);
-                }
-            }
-        });
-    }
-
-    // Method to handle button actions
     @FXML
     private void handleButtonAction(javafx.event.ActionEvent event) {
-        // Get the button that was clicked
-        Button button = (Button) event.getSource();
-        // Get the text of the button
-        String buttonText = button.getText();
+        String buttonText = ((javafx.scene.control.Button) event.getSource()).getText();
 
-        // If the result is shown and the button is not an operator, reset the input and
-        // operands
-        if (resultShown && !isOperator(buttonText)) {
-            currentInput = "";
-            operands.clear();
-            operators.clear();
-            currentOperator = "";
-            resultShown = false;
-        }
-
-        // If the button is an operator, process the operator
-        if (isOperator(buttonText)) {
-            // If there is current input, add it to the operands list
+        if ("0123456789.".contains(buttonText)) {
+            // If the button is a number or a decimal point, append it to the current input
+            if (resultShown) {
+                currentInput = "";
+                resultShown = false;
+            }
+            currentInput += buttonText;
+            display.setText(currentInput);
+        } else if ("+-*/".contains(buttonText)) {
+            // If the button is an operator, process the current input and operator
             if (!currentInput.isEmpty()) {
                 operands.add(Double.parseDouble(currentInput));
                 currentInput = "";
             }
-            // Set the current operator to the button text
+            if (!operators.isEmpty() && resultShown) {
+                operators.set(operators.size() - 1, buttonText);
+            } else {
+                operators.add(buttonText);
+            }
             currentOperator = buttonText;
-            operators.add(currentOperator);
-        } else if (buttonText.equals("=")) {
-            // If the button is "=", calculate the result
+            resultShown = false;
+        } else if ("=".equals(buttonText)) {
+            // If the button is the equals sign, process the current input and calculate the result
             if (!currentInput.isEmpty()) {
                 operands.add(Double.parseDouble(currentInput));
-                calculateResult();
+                currentInput = "";
             }
-        } else {
-            // If the button is a number or decimal point, append it to the current input
-            currentInput += buttonText;
-            display.setText(currentInput);
+            handleEqualsAction();
+        } else if ("C".equals(buttonText)) {
+            // If the button is the clear button, clear the current input and reset the calculator
+            handleClear();
+        } else if ("DEL".equals(buttonText)) {
+            // If the button is the delete button, delete the last character of the current input
+            handleDelete();
+        } else if ("OFF".equals(buttonText)) {
+            // If the button is the off button, handle the off action
+            handleOff();
+        } else if ("HIST".equals(buttonText)) {
+            // If the button is the history button, show the history
+            handleShowHistory();
         }
     }
 
     @FXML
+    private void handleEqualsAction() {
+        try {
+            if (operands.size() < 2 || operators.size() < 1) {
+                throw new IllegalArgumentException("Insufficient operands or operators");
+            }
+
+            double result = operands.get(0);
+            for (int i = 1; i < operands.size(); i++) {
+                String operator = operators.get(i - 1);
+                CalculatorOperation operation;
+                switch (operator) {
+                    case "+":
+                        operation = new AdditionOperation();
+                        break;
+                    case "-":
+                        operation = new SubtractionOperation();
+                        break;
+                    case "*":
+                        operation = new MultiplicationOperation();
+                        break;
+                    case "/":
+                        operation = new DivisionOperation();
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Invalid operator: " + operator);
+                }
+                result = operation.calculate(result, operands.get(i));
+            }
+
+            // Create a new Calculation object with the current operands, operators, and result
+            String calculation = operands.stream().map(String::valueOf).collect(Collectors.joining(" " + currentOperator + " ")) + " = " + result;
+
+            // Add the new calculation to the top of the history list
+            historyItems.add(0, calculation);
+
+            // Display the result in the UI
+            display.setText(String.valueOf(result));
+
+            // Update the historyListView with the latest history items
+            historyListView.setItems(historyItems);
+
+            // Clear the operands and operators lists and reset the current input and operator
+            operands.clear();
+            operators.clear();
+            currentInput = "";
+            currentOperator = "";
+            resultShown = false;
+
+        } catch (NumberFormatException e) {
+            // Handle the exception
+            display.setText("Error: Invalid number format");
+        } catch (ArithmeticException e) {
+            // Handle the exception
+            display.setText("Error: Arithmetic exception");
+        } catch (IllegalArgumentException e) {
+            // Handle the exception
+            display.setText("Error: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleAdditionOperation() {
+        double operand1 = Double.parseDouble(operand1Field.getText());
+        double operand2 = Double.parseDouble(operand2Field.getText());
+        CalculatorOperation addition = new AdditionOperation();
+        double result = addition.calculate(operand1, operand2);
+        resultLabel.setText("Addition Result: " + result);
+    }
+
+    @FXML
+    private void handleSubtractionOperation() {
+        double operand1 = Double.parseDouble(operand1Field.getText());
+        double operand2 = Double.parseDouble(operand2Field.getText());
+        CalculatorOperation subtraction = new SubtractionOperation();
+        double result = subtraction.calculate(operand1, operand2);
+        resultLabel.setText("Subtraction Result: " + result);
+    }
+
+    @FXML
+    private void handleMultiplicationOperation() {
+        double operand1 = Double.parseDouble(operand1Field.getText());
+        double operand2 = Double.parseDouble(operand2Field.getText());
+        CalculatorOperation multiplication = new MultiplicationOperation();
+        double result = multiplication.calculate(operand1, operand2);
+        resultLabel.setText("Multiplication Result: " + result);
+    }
+
+    @FXML
+    private void handleDivisionOperation() {
+        double operand1 = Double.parseDouble(operand1Field.getText());
+        double operand2 = Double.parseDouble(operand2Field.getText());
+        CalculatorOperation division = new DivisionOperation();
+        double result = division.calculate(operand1, operand2);
+        resultLabel.setText("Division Result: " + result);
+    }
+
+    @FXML
     private void handleMemoryClear() {
+        // Clear the memory (history) of calculations
         historyItems.clear();
-        System.out.println("Memory cleared");
+        historyListView.setItems(historyItems);
     }
 
     @FXML
     private void handleClear() {
+        // Clear the current input and reset the calculator
         currentInput = "";
         operands.clear();
         operators.clear();
-        currentOperator = "";
         display.setText("");
+        resultShown = false;
     }
 
     @FXML
     private void handleDelete() {
+        // Delete the last character of the current input
         if (!currentInput.isEmpty()) {
             currentInput = currentInput.substring(0, currentInput.length() - 1);
             display.setText(currentInput);
@@ -142,145 +208,40 @@ public class UserInterfaceController {
 
     @FXML
     private void handleOff() {
+        // Handle the off action
         System.exit(0);
     }
 
-    // Method to check if a string is an operator
-    private boolean isOperator(String text) {
-        return text.equals("+") || text.equals("-") || text.equals("*") || text.equals("/");
-    }
-
-    // Method to calculate the result of the current operation
-    private void calculateResult() {
+    @FXML
+    private void handleOpenFormCalculator() {
         try {
-            double result = operands.get(0);
-            for (int i = 1; i < operands.size(); i++) {
-                String operator = operators.get(i - 1);
-                double operand = operands.get(i);
-                switch (operator) {
-                    case "+":
-                        result += operand;
-                        break;
-                    case "-":
-                        result -= operand;
-                        break;
-                    case "*":
-                        result *= operand;
-                        break;
-                    case "/":
-                        result /= operand;
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Invalid operator: " + operator);
-                }
-            }
-
-            // Create a new Calculation object with the current operands, operators, and
-            // result
-            Calculation calculation = new Calculation(new ArrayList<>(operands), new ArrayList<>(operators));
-
-            // Add the new calculation to the top of the history list
-            historyItems.add(0, calculation);
-
-            // Display the result in the UI
-            display.setText(String.valueOf(result));
-
-            // Update the current input to the result for the next calculation
-            currentInput = String.valueOf(result);
-
-            // Clear the operands and operators lists and add the result as the only operand
-            // for the next calculation
-            operands.clear();
-            operators.clear();
-            operands.add(result); // Only the result is used for the next calculation
-
-            // Reset the current operator and set the resultShown flag to true
-            currentOperator = "";
-            resultShown = true;
-
-        } catch (NumberFormatException e) {
-            // Handle the exception
-            display.setText("Error: Invalid number format");
-        } catch (ArithmeticException e) {
-            // Catch block for handling arithmetic exceptions (e.g., division by zero)
-            display.setText("Error: Arithmetic error");
+            // Load the form calculator FXML file
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/formCalculator.fxml"));
+            // Create a new scene with the loaded FXML root
+            Scene scene = new Scene(root);
+            // Add the stylesheet to the scene
+            scene.getStylesheets().add(getClass().getResource("/com/example/styles.css").toExternalForm());
+            // Create a new stage (window) for the form calculator
+            Stage stage = new Stage();
+            stage.setTitle("Form Calculator");
+            stage.setScene(scene);
+            stage.show();
         } catch (Exception e) {
-            // Catch block for handling any other exceptions
-            display.setText("Error: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    // Method to handle showing the calculation history
     @FXML
     private void handleShowHistory() {
-        // Sort the history items, convert them to strings, and collect them into an
-        // observable list
+        // Sort the history items by the end result from lowest to highest
         ObservableList<String> sortedItems = historyItems.stream()
-                .sorted()
-                .map(Calculation::toString)
+                .sorted(Comparator.comparingDouble(this::extractResult))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-        // Create a ListView to display the sorted items
-        ListView<String> sortedListView = new ListView<>(sortedItems);
+        // Update the historyListView with sorted items
+        historyListView.setItems(sortedItems);
 
-        // Set a custom cell factory to style the ListView items
-        sortedListView.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-            @Override
-            public ListCell<String> call(ListView<String> listView) {
-                return new ListCell<String>() {
-                    @Override
-                    protected void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (item != null) {
-                            // Set the text of the ListView item
-                            setText(item);
-                            // Apply custom styles to the ListView item
-                            setStyle("-fx-background-color: #1a001a; -fx-text-fill: #ffffff;");
-                        } else {
-                            // Clear the text if the item is null
-                            setText(null);
-                        }
-                    }
-                };
-            }
-        });
-
-        // Create a VBox layout and add the sortedListView to it
-        VBox vbox = new VBox(sortedListView);
-
-        // Create a new Scene with the VBox layout, setting its width and height
-        Scene scene = new Scene(vbox, 300, 400);
-
-        // Create a new Stage (window) for displaying the sorted calculations
-        Stage stage = new Stage();
-        stage.setTitle("Sorted Calculations"); // Set the title of the window
-        stage.setScene(scene); // Set the scene to the stage
-        stage.show(); // Display the stage
-    }
-
-    // Method to continue a calculation based on a previous result
-    private void continueCalculation(Calculation calculation) {
-        // Clear the operands list
-        operands.clear();
-        // Add the result of the previous calculation as the only operand
-        operands.add(calculation.getResult()); // Only the result is used for the next calculation
-        // Reset the current operator and input
-        currentOperator = "";
-        currentInput = "";
-        // Display the result of the previous calculation
-        display.setText(String.valueOf(calculation.getResult()));
-        // Set the resultShown flag to false to allow further calculations
-        resultShown = false;
-    }
-
-    // Method to sort and display calculations
-    public void displaySortedCalculations() {
-        ObservableList<String> sortedItems = historyItems.stream()
-                .sorted() // This uses the compareTo method in Calculation
-                .map(Calculation::toString)
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
-
-        // Create a ListView to display the sorted items
+        // Create a ListView to display the sorted items in a popup window
         ListView<String> sortedListView = new ListView<>(sortedItems);
 
         VBox vbox = new VBox(sortedListView);
@@ -293,5 +254,10 @@ public class UserInterfaceController {
         stage.setTitle("Sorted Calculations"); // Set the title of the window
         stage.setScene(scene); // Set the scene to the stage
         stage.show(); // Display the stage
+    }
+
+    private double extractResult(String calculation) {
+        String[] parts = calculation.split(" = ");
+        return Double.parseDouble(parts[1]);
     }
 }
