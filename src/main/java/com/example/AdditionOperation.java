@@ -1,7 +1,5 @@
 package com.example;
 
-import java.util.List;
-
 // Class to represent the addition operation, extending the CalculatorOperation abstract class
 public class AdditionOperation extends CalculatorOperation {
     @Override

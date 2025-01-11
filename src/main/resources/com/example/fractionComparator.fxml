@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.FractionComparatorController" spacing="10" alignment="CENTER">
+    <Label text="Fraction Comparator" style="-fx-font-size: 24px;"/>
+    <GridPane hgap="10" vgap="10" alignment="CENTER">
+        <Label text="Fraction 1:" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+        <TextField fx:id="numerator1Field" promptText="Numerator" GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+        <TextField fx:id="denominator1Field" promptText="Denominator" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2"/>
+        
+        <Label text="Fraction 2:" GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.columnSpan="2"/>
+        <TextField fx:id="numerator2Field" promptText="Numerator" GridPane.rowIndex="1" GridPane.columnIndex="2" GridPane.columnSpan="2"/>
+        <TextField fx:id="denominator2Field" promptText="Denominator" GridPane.rowIndex="2" GridPane.columnIndex="2" GridPane.columnSpan="2"/>
+        
+        <Button text="Compare" onAction="#handleCompareFractions" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+    </GridPane>
+    <Label fx:id="resultLabel" style="-fx-font-size: 18px;"/>
+</VBox>

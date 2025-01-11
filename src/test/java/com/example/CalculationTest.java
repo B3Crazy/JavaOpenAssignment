@@ -10,6 +10,9 @@ import com.example.Circle;
 import com.example.Rectangle;
 import com.example.Triangle;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class CalculationTest {
     @Test
     public void testAdditionOperation() {

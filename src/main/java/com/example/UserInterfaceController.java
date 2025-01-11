@@ -62,17 +62,20 @@ public class UserInterfaceController {
             currentOperator = buttonText;
             resultShown = false;
         } else if ("=".equals(buttonText)) {
-            // If the button is the equals sign, process the current input and calculate the result
+            // If the button is the equals sign, process the current input and calculate the
+            // result
             if (!currentInput.isEmpty()) {
                 operands.add(Double.parseDouble(currentInput));
                 currentInput = "";
             }
             handleEqualsAction();
         } else if ("C".equals(buttonText)) {
-            // If the button is the clear button, clear the current input and reset the calculator
+            // If the button is the clear button, clear the current input and reset the
+            // calculator
             handleClear();
         } else if ("DEL".equals(buttonText)) {
-            // If the button is the delete button, delete the last character of the current input
+            // If the button is the delete button, delete the last character of the current
+            // input
             handleDelete();
         } else if ("OFF".equals(buttonText)) {
             // If the button is the off button, handle the off action
@@ -113,8 +116,17 @@ public class UserInterfaceController {
                 result = operation.calculate(result, operands.get(i));
             }
 
-            // Create a new Calculation object with the current operands, operators, and result
-            String calculation = operands.stream().map(String::valueOf).collect(Collectors.joining(" " + currentOperator + " ")) + " = " + result;
+            // Create a new Calculation object with the current operands, operators, and
+            // result
+            StringBuilder calculationBuilder = new StringBuilder();
+            for (int i = 0; i < operands.size(); i++) {
+                calculationBuilder.append(operands.get(i));
+                if (i < operators.size()) {
+                    calculationBuilder.append(" ").append(operators.get(i)).append(" ");
+                }
+            }
+            calculationBuilder.append(" = ").append(result);
+            String calculation = calculationBuilder.toString();
 
             // Add the new calculation to the top of the history list
             historyItems.add(0, calculation);
@@ -125,7 +137,8 @@ public class UserInterfaceController {
             // Update the historyListView with the latest history items
             historyListView.setItems(historyItems);
 
-            // Clear the operands and operators lists and reset the current input and operator
+            // Clear the operands and operators lists and reset the current input and
+            // operator
             operands.clear();
             operators.clear();
             currentInput = "";
@@ -225,6 +238,29 @@ public class UserInterfaceController {
             Stage stage = new Stage();
             stage.setTitle("Form Calculator");
             stage.setScene(scene);
+            // Make the primary stage non-resizable
+            stage.setResizable(false);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleOpenFractionComparator() {
+        try {
+            // Load the fraction comparator FXML file
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/fractionComparator.fxml"));
+            // Create a new scene with the loaded FXML root
+            Scene scene = new Scene(root);
+            // Add the stylesheet to the scene
+            scene.getStylesheets().add(getClass().getResource("/com/example/styles.css").toExternalForm());
+            // Create a new stage (window) for the fraction comparator
+            Stage stage = new Stage();
+            stage.setTitle("Fraction Comparator");
+            stage.setScene(scene);
+            // Make the primary stage non-resizable
+            stage.setResizable(false);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

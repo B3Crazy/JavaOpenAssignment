@@ -52,9 +52,10 @@
                 
                 <!-- blank buttons -->
                 <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="0" prefWidth="50" prefHeight="50"/>
-                <Button text="" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
+                <!-- Compare Fractions button -->
+                <Button text="CF" onAction="#handleOpenFractionComparator" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="50" prefHeight="50"/>
                 <!-- open Form Calculator -->
-                <Button text="Form Calculator" onAction="#handleOpenFormCalculator" GridPane.rowIndex="5" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
+                <Button text="FC" onAction="#handleOpenFormCalculator" GridPane.rowIndex="5" GridPane.columnIndex="2" prefWidth="50" prefHeight="50"/>
                 <!-- ordered calculations button -->
                 <Button text="SH" onAction="#handleShowHistory" GridPane.rowIndex="5" GridPane.columnIndex="3" prefWidth="50" prefHeight="50"/>
             </GridPane>

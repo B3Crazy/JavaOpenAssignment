@@ -1,4 +1,6 @@
 package com.example;
+
+// Class to represent the division operation, extending the CalculatorOperation abstract class
 public class DivisionOperation extends CalculatorOperation {
     @Override
     public double calculate(double operand1, double operand2) {

@@ -8,7 +8,7 @@
 .text-field {
     -fx-background-color: #3c3f41; /* Set the background color to a dark gray */
     -fx-text-fill: #ffffff; /* Set the text color to white */
-    -fx-border-color: #ff00ea; /* Set the border color to bright pink */
+    -fx-border-color: #00f815; /* Set the border color to bright pink */
     -fx-border-width: 2px; /* Set the border width to 2 pixels */
 }
 
@@ -16,13 +16,13 @@
 .button {
     -fx-background-color: #3c3f41; /* Set the background color to a dark gray */
     -fx-text-fill: #ffffff; /* Set the text color to white */
-    -fx-border-color: #ff00ea; /* Set the border color to bright pink */
+    -fx-border-color: #00f815; /* Set the border color to bright pink */
     -fx-border-width: 2px; /* Set the border width to 2 pixels */
 }
 
 /* Button hover effect */
 .button:hover {
-    -fx-background-color: #ff00ea; /* Change the background color to bright pink when hovered */
+    -fx-background-color: #00f815; /* Change the background color to bright pink when hovered */
 }
 
 /* Label styling */
@@ -34,7 +34,7 @@
 .list-view {
     -fx-background-color: #1a001a; /* Set the background color to very dark purple */
     -fx-text-fill: #ffffff; /* Set the text color to white */
-    -fx-border-color: #ff00ea; /* Set the border color to bright pink */
+    -fx-border-color: #00f815; /* Set the border color to bright pink */
     -fx-border-width: 2px; /* Set the border width to 2 pixels */
 }
 
