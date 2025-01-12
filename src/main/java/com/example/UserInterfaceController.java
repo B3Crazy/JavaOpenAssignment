@@ -274,9 +274,6 @@ public class UserInterfaceController {
                 .sorted(Comparator.comparingDouble(this::extractResult))
                 .collect(Collectors.toCollection(FXCollections::observableArrayList));
 
-        // Update the historyListView with sorted items
-        historyListView.setItems(sortedItems);
-
         // Create a ListView to display the sorted items in a popup window
         ListView<String> sortedListView = new ListView<>(sortedItems);
 
